@@ -1,7 +1,6 @@
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 
 public class Interactable : MonoBehaviour
 {
@@ -17,38 +16,81 @@ public class Interactable : MonoBehaviour
     private GameObject _player;
     [SerializeField]
     private StarterAssetsInputs _input;
+    [SerializeField]
+    private Material _outlineMaterial;
 
     private MeshRenderer _meshRenderer;
+    private int _outlineMaterialIndex;
+    private bool _isInView = true;
     
-
     private void Awake()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        _meshRenderer = GetComponent<MeshRenderer>();   
     }
 
-    void Update()
+    private void Start()
     {
-        // player in range and focusing on interactable object
+        Setup();
+    }
+
+    private void Update()
+    {
+        if (_isInView)
+        {
+            TurnInteractions();
+        }
+    }
+
+    private void Setup()
+    {
+        Material[] materials = new Material[_meshRenderer.materials.Length + 1];
+        _meshRenderer.materials.CopyTo(materials, materials.Length - 2);
+        materials[materials.Length - 1] = _outlineMaterial;
+        _outlineMaterialIndex = materials.Length - 1;
+        _meshRenderer.materials = materials;
+    }
+
+    public void TurnInteractions()
+    {
         if (IsPlayerInRange() && IsPlayerFocusing())
         {
-            _meshRenderer.materials[0].SetColor("_OutlineColor", Selectable);
+            UpdateInteractableMaterial(Selectable);
 
-            // show highlight
-
-            // if player presses interact button, trigger some function
             if (_input.interact)
             {
                 CallbackEvent.Invoke();
             }
-            
-
-        } else
+        }
+        else
         {
-            _meshRenderer.materials[0].SetColor("_OutlineColor", NotSelectable);
+            UpdateInteractableMaterial(NotSelectable);
         }
 
         // REMOVE THIS LATER
         _input.interact = false;
+    }
+
+    private void OnBecameVisible()
+    {
+        _isInView = true;
+    }
+
+    private void OnBecameInvisible()
+    {
+        _isInView = false;
+    }
+
+    private void UpdateInteractableMaterial(Color setColor)
+    {
+        if (_outlineMaterialIndex == -1 || _meshRenderer.materials[_outlineMaterialIndex] != _outlineMaterial)
+        {
+            UpdateOutlineMaterialIndex();
+            if (_outlineMaterialIndex == -1)
+            {
+                return;
+            }
+        }
+        _meshRenderer.materials[_outlineMaterialIndex].SetColor("_OutlineColor", setColor);
     }
 
     private bool IsPlayerInRange()
@@ -77,4 +119,17 @@ public class Interactable : MonoBehaviour
             return false;
         }
     }
+
+    private void UpdateOutlineMaterialIndex()
+    {
+        for (int i=0; i<_meshRenderer.materials.Length; i++)
+        {
+            if (_meshRenderer.materials[i] == _outlineMaterial)
+            {
+                _outlineMaterialIndex = i;
+                return;
+            }
+        }
+    }
 }
+
