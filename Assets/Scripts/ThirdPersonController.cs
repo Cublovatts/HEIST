@@ -15,6 +15,14 @@ namespace StarterAssets
     public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
+        [SerializeField]
+        private float StandingHeight = 1.8f;
+        private float _standingCentre;
+
+        [SerializeField]
+        private float CrouchingHeight = 0.9f;
+        private float _crouchingCentre;
+
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
 
@@ -131,6 +139,10 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            // Initialise standing and crouching centres
+            _standingCentre = StandingHeight / 2;
+            _crouchingCentre = CrouchingHeight / 2;
         }
 
         private void Start()
@@ -354,6 +366,17 @@ namespace StarterAssets
         private void Crouch()
         {
             _animator.SetBool(_animIDCrouch, _input.crouch);
+
+            // Adjust collider height
+            if (_input.crouch)
+            {
+                _controller.height = CrouchingHeight;
+                _controller.center = new Vector3(_controller.center.x, _crouchingCentre, _controller.center.z);
+            } else
+            {
+                _controller.height = StandingHeight;
+                _controller.center = new Vector3(_controller.center.x, _standingCentre, _controller.center.z);
+            }
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

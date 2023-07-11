@@ -1,4 +1,5 @@
 using StarterAssets;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -21,7 +22,6 @@ public class Interactable : MonoBehaviour
 
     private MeshRenderer _meshRenderer;
     private int _outlineMaterialIndex;
-    private bool _isInView = true;
     
     private void Awake()
     {
@@ -33,11 +33,12 @@ public class Interactable : MonoBehaviour
         Setup();
     }
 
-    private void Update()
+    private IEnumerator Interaction()
     {
-        if (_isInView)
+        while (true)
         {
             TurnInteractions();
+            yield return null;
         }
     }
 
@@ -58,7 +59,7 @@ public class Interactable : MonoBehaviour
 
             if (_input.interact)
             {
-                CallbackEvent.Invoke();
+                InvokeInteractable();
             }
         }
         else
@@ -70,14 +71,21 @@ public class Interactable : MonoBehaviour
         _input.interact = false;
     }
 
+    [ContextMenu("InvokeInteractable")]
+    private void InvokeInteractable()
+    {
+        CallbackEvent.Invoke();
+    }
+
     private void OnBecameVisible()
     {
-        _isInView = true;
+        StartCoroutine("Interaction");
     }
 
     private void OnBecameInvisible()
     {
-        _isInView = false;
+        Debug.Log("Out of view");
+        StopCoroutine("Interaction");
     }
 
     private void UpdateInteractableMaterial(Color setColor)
