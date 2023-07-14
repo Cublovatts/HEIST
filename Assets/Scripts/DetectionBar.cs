@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DetectionBar : MonoBehaviour
 {
-    public float _currentDetection;
+    public float CurrentDetection;
 
     private float _detectionMax = 100f;
     private float _maxWidth = 0.2f;
@@ -14,7 +14,7 @@ public class DetectionBar : MonoBehaviour
 
     private void SetDetectionBarWidth()
     {
-        float targetWidth = (_currentDetection / _detectionMax) * _maxWidth;
+        float targetWidth = (CurrentDetection / _detectionMax) * _maxWidth;
         Vector3 localScale = transform.localScale;
         localScale.x = targetWidth;
         transform.localScale = localScale;

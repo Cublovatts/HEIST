@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 2840d8931df89dd43afef51ddfe8118d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,9 +123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb0471fd32b74843b704b1ad7201733, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentDetection: 0
-  _detectionMax: 100
-  _maxWidth: 0.2
+  CurrentDetection: 0
 --- !u!1 &6313977913470430216
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +138,8 @@ GameObject:
   - component: {fileID: 6313977913470430222}
   - component: {fileID: 6313977913470430211}
   - component: {fileID: 6313977913470430210}
+  - component: {fileID: 6601877372081383117}
+  - component: {fileID: 1683529691895482800}
   m_Layer: 10
   m_Name: Enemy
   m_TagString: Untagged
@@ -268,6 +268,42 @@ MonoBehaviour:
   - Destination: {fileID: 0}
     DelayAtDestination: 0
   CurrentDestinationName: 
+--- !u!114 &6601877372081383117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313977913470430216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 886d15a17015a6e439be8923fc900f01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LastKnownPosition: {x: 0, y: 0, z: 0}
+  _detectionBar: {fileID: 1479205000741842416}
+--- !u!114 &1683529691895482800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6313977913470430216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6c6956816605c4c8a56b94ba34fa6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MeshRenderer: {fileID: 6313977913470430221}
+  PatrolSequence: {fileID: 6313977913470430210}
+  Detection: {fileID: 6601877372081383117}
+  NavMeshAgent: {fileID: 6313977913470430211}
+  PlayerPosition: {fileID: 0}
+  PatrolSpeed: 2.5
+  InvestigateSpeed: 2.5
+  PursueSpeed: 4
+  _stateMachine:
+    CurrentStateName: 
 --- !u!1 &6313977913512661877
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,6 +630,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eaba2d12b20d7a4cbbd087596a4dd8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _detection: {fileID: 6601877372081383117}
+  _coneDetectionFactor: 40
   _playerStealth: {fileID: 0}
   _enemyMeshRenderer: {fileID: 6313977913470430221}
   _enemyObject: {fileID: 6313977913470430216}

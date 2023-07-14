@@ -23,6 +23,16 @@ public class PatrolSequence : MonoBehaviour
         UpdateNavMeshDestination();
     }
 
+    private void OnEnable()
+    {
+        UpdateNavMeshDestination();
+    }
+
+    private void OnDisable()
+    {
+        RemoveNavMeshDestination();
+    }
+
     void Update()
     {
         if (_atDestination && !_isDelaying)
@@ -64,8 +74,15 @@ public class PatrolSequence : MonoBehaviour
 
     private void UpdateNavMeshDestination()
     {
+        _navMeshAgent.isStopped = false;
         _navMeshAgent.destination = Destinations[_currentDestinationIndex].Destination.position;
         CurrentDestinationName = Destinations[_currentDestinationIndex].Destination.name;
+    }
+
+    private void RemoveNavMeshDestination()
+    {
+        _navMeshAgent.isStopped = true;
+        CurrentDestinationName = "";
     }
 
     private float GetPathRemainingDistance()

@@ -1,8 +1,11 @@
-using StarterAssets;
 using UnityEngine;
 
 public class VisionCone : MonoBehaviour
 {
+    [SerializeField]
+    private Detection _detection;
+    [SerializeField]
+    private float _coneDetectionFactor;
     [SerializeField]
     private PlayerStealth _playerStealth;
     [SerializeField]
@@ -12,16 +15,13 @@ public class VisionCone : MonoBehaviour
 
     private void Start()
     {
-        _enemyMeshRenderer.material.color = Color.green;
+        _enemyMeshRenderer.material.color = Color.green; 
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Player")
         {
-            Debug.Log("Player in view cone");
-            
-
             GameObject targetObject = _playerStealth.GetVisionTarget();
 
             Vector3 direction = targetObject.transform.position - _enemyObject.transform.position;
@@ -32,18 +32,9 @@ public class VisionCone : MonoBehaviour
             {
                 if (hitInfo.collider.tag == "Player")
                 {
-                    Debug.Log("Player hit by raycast");
-                    _enemyMeshRenderer.material.color = Color.red;
-                } else
-                {
-                    _enemyMeshRenderer.material.color = Color.green;
-                }
+                    _detection.IncrementDetectionLevel(_playerStealth.GetVisibilityFactor() * _coneDetectionFactor * Time.deltaTime, hitInfo.collider.transform.position);
+                } 
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        _enemyMeshRenderer.material.color = Color.green;
     }
 }
